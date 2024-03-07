@@ -1,4 +1,3 @@
-```markdown
 # CoinoLive Crypto Payment Gateway API Wrapper
 
 This repository contains a C# class `CoinoLive` that provides functionality to interact with the CoinoLive Crypto Payment Gateway API. This class allows you to create orders, redirect payments, and verify payments easily within your C# applications.
