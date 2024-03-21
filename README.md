@@ -2,48 +2,50 @@
 
 This repository contains a C# class `CoinoLive` that provides functionality to interact with the CoinoLive Crypto Payment Gateway API. This class allows you to create orders, redirect payments, and verify payments easily within your C# applications.
 
-
 ## Installation
 
-To integrate the CoinoLive API wrapper into your Rust project, follow these simple steps:
+To use the `CoinoLive` class in your C# project, follow these steps:
 
-1. Clone or download this repository to your local machine.
-2. Include the `coino_live.rs` file in your Rust project.
+1. Clone or download this repository.
+2. Include the `CoinoLive.cs` file in your C# project.
 
 ## Usage
 
-Initialize an instance of CoinoLive by providing your API key:
+1. Initialize an instance of `CoinoLive` by providing your API key:
 
-```rust
-let coino_live = CoinoLive::new("YOUR_API_KEY_HERE".to_string());
-```
+   ```csharp
+   CoinoLive coinoLive = new CoinoLive("YOUR_API_KEY_HERE");
+   ```
 
-Use the `create_order` method to create an order:
+2. Use the `CreateOrder` method to create an order:
 
-```rust
-let response = coino_live.create_order(10.0, "https://domain.com/verify_payment".to_string(), "Pay For shoes".to_string(), "M-2".to_string()).await?;
-```
+   ```csharp
+   string response = await coinoLive.CreateOrder(10, "https://domain.com/verify_payment", "Pay For shoes", "M-2");
+   ```
 
-Redirect the user to the payment URL obtained from the `create_order` method:
+3. Redirect the user to the payment URL obtained from the `CreateOrder` method:
 
-```rust
-coino_live.redirect_payment("ORDER_ID");
-```
+   ```csharp
+   coinoLive.RedirectPayment("ORDER_ID");
+   ```
 
-Use the `verify_payment` method to verify the payment status by providing the order ID:
+4. Use the `VerifyPayment` method to verify the payment status by providing the order ID:
 
-```rust
-let verification_response = coino_live.verify_payment("ORDER_ID").await?;
-```
+   ```csharp
+   string verificationResponse = await coinoLive.VerifyPayment("ORDER_ID");
+   ```
 
-Handle the responses accordingly in your application.
+5. Handle the responses accordingly in your application.
 
 ## Dependencies
 
-- reqwest (for making HTTP requests)
-- serde (for JSON serialization/deserialization)
+- Newtonsoft.Json (for JSON serialization/deserialization)
 
-Make sure to replace `"YOUR_API_KEY_HERE"` with your actual CoinoLive API key when initializing the `CoinoLive` instance.
+```
+
+Make sure to replace `"YOUR_API_KEY_HERE"` with your actual CoinoLive API key when initializing the `CoinoLive` instance. Also, customize the usage instructions according to your specific implementation if needed.
+
+```
 
 ## Connect with Us
 
