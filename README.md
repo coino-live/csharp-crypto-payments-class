@@ -1,21 +1,46 @@
-# Coino Live .NET library
+# Coino Live C# Library: Accept Crypto Payments in .NET 8
 
-Accept crypto payments with the [Coino Live API](https://coino.live/api-guide). C# for .NET 8+, no dependencies
-(only `System.Net.Http` and `System.Text.Json` from the framework).
+The official C# / .NET library for the [Coino Live REST API v2](https://coino.live/api-guide). Use it to accept Bitcoin, USDT, USDC and other crypto payments in any .NET 8+ application.
 
-This library replaces the old `CoinoLive.cs` class, which called API v1. API v1 has been removed.
+**Version 1.0.0 · .NET 8+ · MIT license · No third-party dependencies**
+
+The library uses only `System.Net.Http` and `System.Text.Json` from the framework.
+
+> **Upgrading from `CoinoLive.cs`?** This library replaces the old `CoinoLive.cs` class, which called API v1. API v1 has been retired and its endpoints no longer answer, so the old class no longer works.
+
+## What the library does
+
+- **Create payments** and redirect customers to the Coino Live checkout with `payment.CheckoutUrl`.
+- **Verify signed webhooks** for payment, custody deposit and withdrawal events.
+- **Give your users lifetime deposit addresses** (custody) and move their balances to yours.
+- **Send withdrawals** and read balances, currencies and assets.
+- **Handle failures** with typed exceptions and automatic retries for requests that are safe to repeat. Every method supports a `CancellationToken`.
+
+## About the Coino Live payment gateway
+
+[Coino Live](https://coino.live) is a crypto payment gateway.
+
+- **117 assets on 11 networks:** Bitcoin, Litecoin, Ethereum, BNB Smart Chain, opBNB, Polygon, Base, Arbitrum, TRON, TON and Solana.
+  - USDT and USDC are available on most of these networks.
+  - Dogecoin and Bitcoin Cash are not accepted.
+- **Fees:** a 0.25% platform fee per payment. Blockchain network fees are separate.
+- **Registration:** sign up with an email address and a password. No KYC is required.
+- **Settlement:** payments are credited to your Coino Live balance. You then withdraw funds to your own wallet.
+
+## Requirements
+
+- .NET 8 or later
+- A Coino Live account and API key, available under **Dashboard → Developers**
 
 ## Install
 
-The library is not on NuGet yet. Download the source (**Code → Download ZIP**) or a zip from
-[Releases](https://github.com/coino-live/csharp-crypto-payments-class/releases), unzip it and reference the project
-from yours:
+The library is not on NuGet yet. Download the source (**Code → Download ZIP**) or a zip from [Releases](https://github.com/coino-live/csharp-crypto-payments-class/releases). Unzip it and reference the project from yours:
 
 ```bash
 dotnet add reference path/to/csharp-crypto-payments-class/src/CoinoLive/CoinoLive.csproj
 ```
 
-Or build a package and install it from a local folder:
+You can also build a package and install it from a local folder:
 
 ```bash
 dotnet pack path/to/csharp-crypto-payments-class/src/CoinoLive -c Release -o /absolute/path/to/packages
@@ -23,7 +48,9 @@ dotnet nuget add source /absolute/path/to/packages --name coinolive-local
 dotnet add package CoinoLive --version 1.0.0
 ```
 
-## Take a payment
+## Accept a crypto payment in C#
+
+Create a payment, then redirect the customer to the checkout:
 
 ```csharp
 using CoinoLive;
@@ -43,7 +70,9 @@ var payment = await coino.Payments.CreateAsync(new CreatePaymentParams
 return Redirect(payment.CheckoutUrl);
 ```
 
-Ship the order when a fresh read says `paid`:
+### Confirm the payment before you ship the order
+
+Ship the order only after a fresh read returns `paid`:
 
 ```csharp
 var payment = await coino.Payments.RetrieveAsync(paymentId);
@@ -53,17 +82,19 @@ if (payment.Status == PaymentStatus.Paid)
 }
 ```
 
-Statuses: `open`, `confirming`, `partially_paid`, `paid`, `expired`, `cancelled` (constants in `PaymentStatus`).
+Payment statuses are `open`, `confirming`, `partially_paid`, `paid`, `expired` and `cancelled`. The matching constants are in `PaymentStatus`.
 
-One client can serve the whole application and is safe to share between threads. In ASP.NET Core, register it once:
+### Use one client in ASP.NET Core
+
+One client can serve the whole application and is safe to share between threads. Register it once:
 
 ```csharp
 builder.Services.AddSingleton(new CoinoLiveClient(builder.Configuration["Coino:ApiKey"]!));
 ```
 
-## Webhooks
+## Verify webhooks
 
-The signature covers the raw body, so read it unparsed (ASP.NET Core minimal API):
+The signature covers the raw request body, so read the body unparsed before you verify it. This example uses an ASP.NET Core minimal API:
 
 ```csharp
 using CoinoLive;
@@ -91,12 +122,15 @@ app.MapPost("/coino-webhook", async (HttpRequest request, CoinoLiveClient coino)
 });
 ```
 
-`Webhook.Verify` also takes the body as a `byte[]`. It refuses signatures older than 300 seconds; pass another
-number of seconds as the fourth argument to change that. The event has `Id`, `Event` (`payment.<status>`,
-`custody.deposit.detected`, `custody.deposit.credited`, `withdrawal.<status>`), `CreatedAt` and `Data` (JSON);
-`evt.DataAs<Payment>()` reads `Data` into a library type.
+- `Webhook.Verify` also accepts the body as a `byte[]`.
+- It rejects signatures older than 300 seconds. To change the limit, pass a different number of seconds as the fourth argument.
+- Each event has `Id`, `Event`, `CreatedAt` and `Data` (JSON).
+- Event names are `payment.<status>`, `custody.deposit.detected`, `custody.deposit.credited` and `withdrawal.<status>`.
+- `evt.DataAs<Payment>()` reads `Data` into a library type.
 
-## Everything else
+## Payments, balances, custody and withdrawals
+
+List or cancel payments, read available currencies, assets and balances, and manage custody users and withdrawals:
 
 ```csharp
 await coino.Payments.ListAsync(status: "paid", orderId: "1001"); // Page<Payment>: .Data, .Meta.NextCursor, .Meta.PrevCursor
@@ -117,7 +151,9 @@ await coino.Withdrawals.CreateAsync(new CreateWithdrawalParams { Asset = "usdt-t
 await coino.Withdrawals.RetrieveAsync(withdrawalId);
 ```
 
-Every method:
+**API withdrawals must be turned on in the gateway settings first.**
+
+### Method reference
 
 | Method | Request | Returns |
 | --- | --- | --- |
@@ -137,13 +173,13 @@ Every method:
 | `AssetsAsync()` | `GET /assets` | `IReadOnlyList<Asset>` |
 | `BalancesAsync()` | `GET /balances` | `IReadOnlyList<Balance>` |
 
-Every method also takes a `CancellationToken` as its last argument. Amounts are decimal strings, as the API sends them
-(never floats). Fields this version does not know yet are kept in each object's `ExtensionData`. API withdrawals must
-be turned on in the gateway settings first.
+- Every method also takes a `CancellationToken` as its last argument.
+- Amounts are decimal strings, as the API sends them. They are never floats.
+- Fields this version does not know yet are kept in each object's `ExtensionData`.
 
 ## Errors and retries
 
-Every failure throws one of these (all in the `CoinoLive` namespace):
+Every failure throws one of these exceptions. All of them are in the `CoinoLive` namespace.
 
 | Exception | When |
 | --- | --- |
@@ -165,9 +201,14 @@ catch (ValidationException e)
 }
 ```
 
-Network errors, 429 and 5xx answers are retried twice with a short pause, but only for requests that are safe to repeat:
-reads, `Payments.CreateAsync()` (it always sends an idempotency key, random unless you pass one as the second argument),
-`Custody.CreateAsync()` (same `ExternalId`, same user) and `Withdrawals.CreateAsync()` with a `Reference`.
+Network errors and 429 or 5xx responses are retried twice with a short pause. Retries apply only to requests that are safe to repeat:
+
+- reads
+- `Payments.CreateAsync()`, which always sends an idempotency key. The key is random unless you pass one as the second argument.
+- `Custody.CreateAsync()`, because the same `ExternalId` returns the same user
+- `Withdrawals.CreateAsync()` with a `Reference`
+
+### Client options
 
 ```csharp
 var coino = new CoinoLiveClient("ck_live_…", new CoinoLiveClientOptions
@@ -185,7 +226,7 @@ var coino = new CoinoLiveClient("ck_live_…", new CoinoLiveClientOptions
 dotnet test
 ```
 
-The tests run offline, against a stand-in for the API.
+The tests run offline against a stand-in for the API.
 
 ## License
 
