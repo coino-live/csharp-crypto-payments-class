@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>CoinoLive</RootNamespace>
+    <AssemblyName>CoinoLive</AssemblyName>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <LangVersion>12</LangVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <PackageId>CoinoLive</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Coino Live</Authors>
+    <Company>Coino Live</Company>
+    <Product>Coino Live .NET library</Product>
+    <Description>.NET library for the Coino Live crypto payment API</Description>
+    <PackageTags>coino live;crypto;payments;bitcoin;usdt;payment gateway</PackageTags>
+    <PackageProjectUrl>https://coino.live/api-guide</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/coino-live/csharp-crypto-payments-class</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Copyright>Copyright (c) 2026 Coino Live</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="CoinoLive.Tests" />
+  </ItemGroup>
+
+</Project>

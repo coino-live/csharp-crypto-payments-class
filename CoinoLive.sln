@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{33000EC8-5105-4982-902F-9E66903AA433}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinoLive", "src\CoinoLive\CoinoLive.csproj", "{2AA9875D-C173-430A-AB07-46B6C1B0580D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{FB55FDF9-3C1A-46BD-8BD8-565014BBF7C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinoLive.Tests", "tests\CoinoLive.Tests\CoinoLive.Tests.csproj", "{B2A4C5FF-63BE-4DB2-8AF5-F31E001E101C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2AA9875D-C173-430A-AB07-46B6C1B0580D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AA9875D-C173-430A-AB07-46B6C1B0580D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AA9875D-C173-430A-AB07-46B6C1B0580D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AA9875D-C173-430A-AB07-46B6C1B0580D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2A4C5FF-63BE-4DB2-8AF5-F31E001E101C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2A4C5FF-63BE-4DB2-8AF5-F31E001E101C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2A4C5FF-63BE-4DB2-8AF5-F31E001E101C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2A4C5FF-63BE-4DB2-8AF5-F31E001E101C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2AA9875D-C173-430A-AB07-46B6C1B0580D} = {33000EC8-5105-4982-902F-9E66903AA433}
+		{B2A4C5FF-63BE-4DB2-8AF5-F31E001E101C} = {FB55FDF9-3C1A-46BD-8BD8-565014BBF7C2}
+	EndGlobalSection
+EndGlobal
