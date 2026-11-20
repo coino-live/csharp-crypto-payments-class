@@ -34,7 +34,13 @@ The library uses only `System.Net.Http` and `System.Text.Json` from the framewor
 
 ## Install
 
-The library is not on NuGet yet. Download the source (**Code → Download ZIP**) or a zip from [Releases](https://github.com/coino-live/csharp-crypto-payments-class/releases). Unzip it and reference the project from yours:
+Install it from [NuGet](https://www.nuget.org/packages/CoinoLive):
+
+```bash
+dotnet add package CoinoLive
+```
+
+Or download the source (**Code → Download ZIP**) or a zip from [Releases](https://github.com/coino-live/csharp-crypto-payments-class/releases). Unzip it and reference the project from yours:
 
 ```bash
 dotnet add reference path/to/csharp-crypto-payments-class/src/CoinoLive/CoinoLive.csproj
